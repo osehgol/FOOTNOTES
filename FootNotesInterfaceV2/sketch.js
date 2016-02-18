@@ -1,13 +1,16 @@
 //developed from examples here: 
 
-var PenNotes = [48, 50, 52, 55, 57, 60, 62, 64, 67, 69]; //array to hold the pentomic scale
-var userNotes = []; //array to hold the user generated scale
-var MusicNotes = [];
+var PenNotes = [48, 50, 52, 55, 57, 60, 62, 64, 67, 69]; //default notes to hold the pentomic scale
+var MusicNotes = []; //this array at setup holds PenNotes[]. When submit Midi clicked+use Custom checked, it takes in userNotes[]
+var noteInput = []; // text input boxes notes, get pushed after clicking submit Midinotes
+var userNotes = []; //takes and holds noteInput[] (UG) values
+
 var serial; // variable to hold an instance of the serialport library
 var portName = '/dev/cu.usbserial-A5026YQG'; // fill in your serial port name here
+
 var lastTime = 0; //timer to keep steps from overlapping
 var osc; // hold oscillator library
-var noteInput = []; // value to hold user inputed Midi Notes
+
 var submit, selectButton, instructions, boxSelection; // value to hold values for midi submissions
 var fileLoad, fileValue, canvas, file, soundLoadInstructions, userUpload, userPlayInstructions;
 var userMedia = false;
@@ -17,34 +20,75 @@ var steps = [];
 var stepCalibration, stepInstructions;
 var stepMachine = false;
 
+//at setup, push default penNotes[] values into MusicNotes[]
 function setup() {
   createCanvas(windowWidth, windowHeight);
   for (var n = 0; n < PenNotes.length; n++) {
     MusicNotes.push(PenNotes[n]);
   }
-  selectButton = createCheckbox(); //create checkbox
-  selectButton.position(0, 350); // position checkbox
-  selectButton.changed(UserScale); // detect change in state of checkbox
-  instructions = createDiv("Check to use custom scale"); // what to do
-  instructions.position(30, 350); // position the checkbox
-  stepCalibration = createCheckbox();
-  stepCalibration.position(300, 350);
-  stepCalibration.changed(CalibrateSteps);
-  stepInstructions = createDiv("Check to calibrate steps (uncheck when finished)");
-  stepInstructions.position(330, 350);
+  
+  //You want to change scale, so submit new note values in these text input boxes
   for (var i = 0; i < 10; i++) {
     noteInput[i] = createInput(); // allow user to input scale midi values
     noteInput[i].size(25);
     noteInput[i].position(0 + i * 50, 310); // put it somewhere, like here
   }
+  
+  //and select submit
+  submit = createButton("Submit Midi Notes"); // say hey, I made the changes
+  submit.position(500, 310); // put it here, cause that looks nice... well makes sense anyway
+  submit.mousePressed(EnterNote);
+  
+  //EnterNote() function runs. It is pushing noteInput (UG) values into userNotes[]. MusicNotes[] 
+  function EnterNote() {
+  userNotes.splice(0, userNotes.length);
+  for (var i = 0; i < 10; i++) {
+    userNotes.push(noteInput[i].value());
+    noteInput[i].value("");
+  }
+}
+  //Now we need to check the "Use Custom Scale" box to start playing
+  
+  //checkbox - "check to use custom scale" -- enables UG notes(noteIntput array) 
+  selectButton = createCheckbox(); //create checkbox "check to use custom scale"
+  selectButton.position(0, 350); // position checkbox 
+  selectButton.changed(UserScale); // detect change in state of checkbox
+  instructions = createDiv("Check to use custom scale"); // text "check to use custom scale"
+  instructions.position(30, 350); // position of text "check to use custom scale"
+  
+  //This runs UserScale()
+  //UserScale() is pushing userNotes[] into MusicNotes[]  
+
+function UserScale() {
+  boxSelection = !boxSelection
+  MusicNotes.splice(0, MusicNotes.length);
+  if (boxSelection === true && userNotes.length > 0 && userMedia === false) {
+    for (var m = 0; m < 10; m++) {
+      MusicNotes.push(userNotes[m]);
+    }
+  }
+  //
+  if (boxSelection === false && userMedia === false) {
+    for (var n = 0; n < PenNotes.length; n++) {
+      MusicNotes.push(PenNotes[n]);
+      //print("PenNotes " + PenNotes[n]);
+    }
+  }
+}
+  
+  //checkbox - "check to calibrate steps" (uncheck when finished)
+  stepCalibration = createCheckbox();
+  stepCalibration.position(300, 350);
+  stepCalibration.changed(CalibrateSteps);
+  stepInstructions = createDiv("Check to calibrate steps (uncheck when finished)");
+  stepInstructions.position(330, 350);
+
   userUpload = createCheckbox();
   userUpload.position(0, 405);
   userUpload.changed(UploadedMedia);
   userPlayInstructions = createDiv("Check to use uploaded sounds");
   userPlayInstructions.position(30, 405);
-  submit = createButton("Submit Midi Notes"); // say hey, I made the changes
-  submit.position(500, 310); // put it here, cause that looks nice... well makes sense anyway
-  submit.mousePressed(EnterNote);
+  
   soundFile = createFileInput(createSound);
   soundFile.position(0, 380)
   soundLoadInstructions = createDiv("Upload sounds to play");
@@ -94,30 +138,8 @@ function draw() {
   }
 }
 
-function EnterNote() {
-  userNotes.splice(0, userNotes.length);
-  for (var i = 0; i < 10; i++) {
-    userNotes.push(noteInput[i].value());
-    noteInput[i].value("");
-  }
-}
-
-function UserScale() {
-  boxSelection = !boxSelection
-  MusicNotes.splice(0, MusicNotes.length);
-  if (boxSelection === true && userNotes.length > 0 && userMedia === false) {
-    for (var m = 0; m < 10; m++) {
-      MusicNotes.push(userNotes[m]);
-    }
-  }
-  if (boxSelection === false && userMedia === false) {
-    for (var n = 0; n < PenNotes.length; n++) {
-      MusicNotes.push(PenNotes[n]);
-      //print("PenNotes " + PenNotes[n]);
-    }
-  }
-}
-
+// CalibrateSteps() runs when "check to calibrate steps is checked"
+// this is not doing anything right now but it's an area to work on
 function CalibrateSteps() {
   stepMachine = !stepMachine;
   return stepMachine;
