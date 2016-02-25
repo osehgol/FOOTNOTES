@@ -145,10 +145,10 @@ background(255);
     //print(music.length);
   }
   
-
   //Displaying values of current notes
   displayNotes();
-  
+  //
+  updateNotes();
 }
 
 // CalibrateSteps() runs when "check to calibrate steps is checked"
@@ -354,9 +354,18 @@ function portClose() {
 }
 
 function displayNotes(){
-  //Displaying values of current notes
+  //Displaying values of default notes
   for (var i = 0; i < MusicNotes.length; i++){
   text(MusicNotes[i], 0+i*50, 330, 70, 80);  
     }  
 }
+
+function updateNotes(){
+  //Displaying values of UG notes
+  for (var i = 0; i < userNotes.length; i++){
+  text(userNotes[i], 0+i*50, 330, 70, 80);  
+    }  
+  
+}
+
 
