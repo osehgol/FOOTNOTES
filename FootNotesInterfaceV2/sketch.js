@@ -26,12 +26,7 @@ function setup() {
   for (var n = 0; n < PenNotes.length; n++) {
     MusicNotes.push(PenNotes[n]);
   }
-  
-  //Displaying values of current notes
-  for (var i = 0; i < MusicNotes.length; i++){
-  text(MusicNotes[i], 0+i*50, 330, 70, 80);  
-    }  
-  
+
   //You want to change scale, so submit new note values in these text input boxes
   for (var i = 0; i < 10; i++) {
     noteInput[i] = createInput(); // allow user to input scale midi values
@@ -46,11 +41,13 @@ function setup() {
   
   //EnterNote() function runs. It is pushing noteInput (UG) values into userNotes[]. MusicNotes[] 
   function EnterNote() {
-  userNotes.splice(0, userNotes.length);
+ 
+ userNotes.splice(0, userNotes.length);
   for (var i = 0; i < 10; i++) {
     userNotes.push(noteInput[i].value());
     noteInput[i].value("");
   }
+ 
 }
   //Now we need to check the "Use Custom Scale" box to start playing
   
@@ -123,13 +120,12 @@ function playNote(note, duration) {
 }
 
 function draw() {
-
+background(255);
   //   //Displaying values of current notes
   // for (var i = 0; i < MusicNotes.length; i++){
   // text(MusicNotes[i], 0+i*50, 330, 70, 80);  
   //   }  
   
-
   var w = width / PenNotes.length;
   for (var i = 0; i < PenNotes.length; i++) {
     var x = i * w;
@@ -148,6 +144,11 @@ function draw() {
     rect(x, 0, w - 1, 300, 20); // key design
     //print(music.length);
   }
+  
+
+  //Displaying values of current notes
+  displayNotes();
+  
 }
 
 // CalibrateSteps() runs when "check to calibrate steps is checked"
@@ -352,5 +353,10 @@ function portClose() {
   println('The serial port closed.');
 }
 
-
+function displayNotes(){
+  //Displaying values of current notes
+  for (var i = 0; i < MusicNotes.length; i++){
+  text(MusicNotes[i], 0+i*50, 330, 70, 80);  
+    }  
+}
 
