@@ -27,6 +27,11 @@ function setup() {
     MusicNotes.push(PenNotes[n]);
   }
   
+  //Displaying values of current notes
+  for (var i = 0; i < MusicNotes.length; i++){
+  text(MusicNotes[i], 0+i*50, 330, 70, 80);  
+    }  
+  
   //You want to change scale, so submit new note values in these text input boxes
   for (var i = 0; i < 10; i++) {
     noteInput[i] = createInput(); // allow user to input scale midi values
@@ -60,7 +65,7 @@ function setup() {
   //UserScale() is pushing userNotes[] into MusicNotes[]  
 
 function UserScale() {
-  boxSelection = !boxSelection
+  boxSelection = !boxSelection //smart hack by JasonO http://p5js.org/reference/#/p5/createCheckbox
   MusicNotes.splice(0, MusicNotes.length);
   if (boxSelection === true && userNotes.length > 0 && userMedia === false) {
     for (var m = 0; m < 10; m++) {
@@ -118,6 +123,13 @@ function playNote(note, duration) {
 }
 
 function draw() {
+
+  //   //Displaying values of current notes
+  // for (var i = 0; i < MusicNotes.length; i++){
+  // text(MusicNotes[i], 0+i*50, 330, 70, 80);  
+  //   }  
+  
+
   var w = width / PenNotes.length;
   for (var i = 0; i < PenNotes.length; i++) {
     var x = i * w;
@@ -339,3 +351,6 @@ function serialError(err) {
 function portClose() {
   println('The serial port closed.');
 }
+
+
+
