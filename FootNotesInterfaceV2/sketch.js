@@ -1,6 +1,6 @@
 //developed from examples here: 
 
-var PenNotes = [48, 50, 52, 55, 57, 60, 62, 64, 67, 69]; //default notes to hold the pentomic scale
+var PenNotes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]; //default notes to hold the pentomic scale
 var MusicNotes = []; //this array at setup holds PenNotes[]. When submit Midi clicked+use Custom checked, it takes in userNotes[]
 var noteInput = []; // text input boxes notes, get pushed after clicking submit Midinotes
 var userNotes = []; //takes and holds noteInput[] (UG) values
